@@ -1,0 +1,717 @@
+{
+	"snapshotNumber": "25",
+	"triggerConfigs": [
+		{
+			"label": "ProcessIndividualFiles",
+			"triggerType": "PRIVATE_TRIGGER",
+			"triggerNumber": "4",
+			"triggerId": "private_trigger/SFTPtoGCS_ProcessIndividualFiles",
+			"startTasks": [
+				{
+					"taskId": "17"
+				}
+			],
+			"properties": {
+				"Trigger name": "SFTPtoGCS_ProcessIndividualFiles"
+			}
+		},
+		{
+			"label": "ChecknewCSVFiles",
+			"triggerType": "CRON",
+			"triggerNumber": "2",
+			"triggerId": "cron_trigger/SFTPtoGCS_Timer_2/10+11+1+*+*",
+			"startTasks": [
+				{
+					"taskId": "15"
+				}
+			],
+			"properties": {
+				"Scheduled Time spec": "10 11 1 * *",
+				"Timer Name": "SFTPtoGCS_Timer_2"
+			}
+		},
+		{
+			"label": "UploadFiletoSFTP",
+			"triggerType": "API",
+			"triggerNumber": "3",
+			"triggerId": "api_trigger/SFTPtoGCS_API_1",
+			"startTasks": [
+				{
+					"taskId": "2"
+				}
+			],
+			"properties": {
+				"Trigger name": "SFTPtoGCS_API_1"
+			}
+		},
+		{
+			"label": "Test-GetFilesfromSFTP",
+			"triggerType": "API",
+			"triggerNumber": "5",
+			"triggerId": "api_trigger/SFTPtoGCS_API_2",
+			"startTasks": [
+				{
+					"taskId": "20"
+				}
+			],
+			"properties": {
+				"Trigger name": "SFTPtoGCS_API_2"
+			}
+		}
+	],
+	"taskConfigs": [
+		{
+			"task": "GenericConnectorTask",
+			"taskId": "1",
+			"parameters": {
+				"actionName": {
+					"key": "actionName",
+					"value": {
+						"stringValue": "Upload"
+					}
+				},
+				"connectionName": {
+					"key": "connectionName",
+					"value": {
+						"stringValue": "projects/bap-emea-apigee-11/locations/europe-west4/connections/sftp"
+					}
+				},
+				"connectionVersion": {
+					"key": "connectionVersion",
+					"value": {
+						"stringValue": "projects/bap-emea-apigee-11/locations/global/providers/default/connectors/sftp/versions/1"
+					}
+				},
+				"connectorInputPayload": {
+					"key": "connectorInputPayload",
+					"value": {
+						"stringValue": "$`Task_1_connectorInputPayload`$"
+					}
+				},
+				"connectorOutputPayload": {
+					"key": "connectorOutputPayload",
+					"value": {
+						"stringValue": "$`Task_1_connectorOutputPayload`$"
+					}
+				},
+				"operation": {
+					"key": "operation",
+					"value": {
+						"stringValue": "EXECUTE_ACTION"
+					}
+				}
+			},
+			"displayName": "UploadFiletoSFTP",
+			"taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+			"externalTaskType": "NORMAL_TASK"
+		},
+		{
+			"task": "GenericConnectorTask",
+			"taskId": "11",
+			"parameters": {
+				"connectionName": {
+					"key": "connectionName",
+					"value": {
+						"stringValue": "projects/bap-emea-apigee-11/locations/europe-west4/connections/sftp"
+					}
+				},
+				"connectionVersion": {
+					"key": "connectionVersion",
+					"value": {
+						"stringValue": "projects/bap-emea-apigee-11/locations/global/providers/default/connectors/sftp/versions/1"
+					}
+				},
+				"connectorOutputPayload": {
+					"key": "connectorOutputPayload",
+					"value": {
+						"stringValue": "$`Task_11_connectorOutputPayload`$"
+					}
+				},
+				"entityType": {
+					"key": "entityType",
+					"value": {
+						"stringValue": "Root"
+					}
+				},
+				"filterClause": {
+					"key": "filterClause",
+					"value": {
+						"stringValue": "$`Task_11_filterClause`$"
+					}
+				},
+				"listEntitiesNextPageToken": {
+					"key": "listEntitiesNextPageToken",
+					"value": {
+						"stringValue": "$`Task_11_listEntitiesNextPageToken`$"
+					}
+				},
+				"listEntitiesPageSize": {
+					"key": "listEntitiesPageSize",
+					"value": {
+						"stringValue": "$`Task_11_listEntitiesPageSize`$"
+					}
+				},
+				"listEntitiesPageToken": {
+					"key": "listEntitiesPageToken",
+					"value": {
+						"stringValue": "$`Task_11_listEntitiesPageToken`$"
+					}
+				},
+				"listEntitiesSortByColumns": {
+					"key": "listEntitiesSortByColumns",
+					"value": {
+						"stringValue": "$`Task_11_listEntitiesSortByColumns`$"
+					}
+				},
+				"operation": {
+					"key": "operation",
+					"value": {
+						"stringValue": "LIST_ENTITIES"
+					}
+				}
+			},
+			"displayName": "GetListofCSVFiles",
+			"nextTasks": [
+				{
+					"taskId": "12"
+				}
+			],
+			"taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+			"externalTaskType": "NORMAL_TASK"
+		},
+		{
+			"task": "SubWorkflowScatterGatherTask",
+			"taskId": "12",
+			"parameters": {
+				"aggregatorMap": {
+					"key": "aggregatorMap",
+					"value": {
+						"stringArray": {}
+					}
+				},
+				"disableEucPropagation": {
+					"key": "disableEucPropagation",
+					"value": {
+						"booleanValue": false
+					}
+				},
+				"executionStrategy": {
+					"key": "executionStrategy",
+					"value": {
+						"stringValue": "SYNC"
+					}
+				},
+				"ignoreIndividualFailures": {
+					"key": "ignoreIndividualFailures",
+					"value": {
+						"booleanValue": false
+					}
+				},
+				"inputMap": {
+					"key": "inputMap",
+					"value": {
+						"stringArray": {}
+					}
+				},
+				"listToScatter": {
+					"key": "listToScatter",
+					"value": {
+						"stringValue": "$`Task_11_connectorOutputPayload`$"
+					}
+				},
+				"maxParallelScatters": {
+					"key": "maxParallelScatters",
+					"value": {
+						"intValue": "50"
+					}
+				},
+				"requestParamsMap": {
+					"key": "requestParamsMap",
+					"value": {}
+				},
+				"responseAggregatorMap": {
+					"key": "responseAggregatorMap",
+					"value": {}
+				},
+				"scatterElementParam": {
+					"key": "scatterElementParam",
+					"value": {
+						"stringValue": ""
+					}
+				},
+				"scatterResponseJson": {
+					"key": "scatterResponseJson",
+					"value": {
+						"stringArray": {
+							"stringValues": [
+								"$`Task_12_scatterResponseJson`$"
+							]
+						}
+					}
+				},
+				"staggeredScheduleByBatch": {
+					"key": "staggeredScheduleByBatch",
+					"value": {
+						"intValue": "0"
+					}
+				},
+				"subworkflowInput": {
+					"key": "subworkflowInput",
+					"value": {
+						"stringValue": "FileToProcess"
+					}
+				},
+				"timeInMsToSchedule": {
+					"key": "timeInMsToSchedule",
+					"value": {
+						"intValue": "0"
+					}
+				},
+				"triggerId": {
+					"key": "triggerId",
+					"value": {
+						"stringValue": "private_trigger/SFTPtoGCS_ProcessIndividualFiles"
+					}
+				},
+				"workflowName": {
+					"key": "workflowName",
+					"value": {
+						"stringValue": "SFTPtoGCS"
+					}
+				}
+			},
+			"displayName": "For Each Parallel",
+			"taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+			"externalTaskType": "NORMAL_TASK"
+		},
+		{
+			"task": "GenericConnectorTask",
+			"taskId": "14",
+			"parameters": {
+				"connectionName": {
+					"key": "connectionName",
+					"value": {
+						"stringValue": "projects/bap-emea-apigee-11/locations/europe-west4/connections/sftp"
+					}
+				},
+				"connectionVersion": {
+					"key": "connectionVersion",
+					"value": {
+						"stringValue": "projects/bap-emea-apigee-11/locations/global/providers/default/connectors/sftp/versions/1"
+					}
+				},
+				"connectorOutputPayload": {
+					"key": "connectorOutputPayload",
+					"value": {
+						"stringValue": "$`Task_14_connectorOutputPayload`$"
+					}
+				},
+				"entityType": {
+					"key": "entityType",
+					"value": {
+						"stringValue": "Root"
+					}
+				},
+				"filterClause": {
+					"key": "filterClause",
+					"value": {
+						"stringValue": "$`Task_14_filterClause`$"
+					}
+				},
+				"listEntitiesNextPageToken": {
+					"key": "listEntitiesNextPageToken",
+					"value": {
+						"stringValue": "$`Task_14_listEntitiesNextPageToken`$"
+					}
+				},
+				"listEntitiesPageSize": {
+					"key": "listEntitiesPageSize",
+					"value": {
+						"stringValue": "$`Task_14_listEntitiesPageSize`$"
+					}
+				},
+				"listEntitiesPageToken": {
+					"key": "listEntitiesPageToken",
+					"value": {
+						"stringValue": "$`Task_14_listEntitiesPageToken`$"
+					}
+				},
+				"listEntitiesSortByColumns": {
+					"key": "listEntitiesSortByColumns",
+					"value": {
+						"stringValue": "$`Task_14_listEntitiesSortByColumns`$"
+					}
+				},
+				"operation": {
+					"key": "operation",
+					"value": {
+						"stringValue": "LIST_ENTITIES"
+					}
+				}
+			},
+			"displayName": "GetFilesfromSFTP",
+			"taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+			"externalTaskType": "NORMAL_TASK"
+		},
+		{
+			"task": "FieldMappingTask",
+			"taskId": "15",
+			"parameters": {
+				"FieldMappingConfigTaskParameterKey": {
+					"key": "FieldMappingConfigTaskParameterKey",
+					"value": {
+						"jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.proto.FieldMappingConfig\",\n  \"mappedFields\": [{\n    \"inputField\": {\n      \"fieldType\": \"STRING_VALUE\",\n      \"transformExpression\": {\n        \"initialValue\": {\n          \"literalValue\": {\n            \"stringValue\": \"FilePath LIKE \\u0027\"\n          }\n        },\n        \"transformationFunctions\": [{\n          \"functionType\": {\n            \"stringFunction\": {\n              \"functionName\": \"CONCAT\"\n            }\n          },\n          \"parameters\": [{\n            \"initialValue\": {\n              \"referenceValue\": \"$`CONFIG_SFTPFilepath`$\"\n            }\n          }]\n        }, {\n          \"functionType\": {\n            \"stringFunction\": {\n              \"functionName\": \"CONCAT\"\n            }\n          },\n          \"parameters\": [{\n            \"initialValue\": {\n              \"literalValue\": {\n                \"stringValue\": \"%.csv\\u0027\"\n              }\n            }\n          }]\n        }]\n      }\n    },\n    \"outputField\": {\n      \"referenceKey\": \"$FilterClauseforCSVFiles$\",\n      \"fieldType\": \"STRING_VALUE\",\n      \"cardinality\": \"OPTIONAL\"\n    }\n  }]\n}"
+					}
+				}
+			},
+			"displayName": "DataMappingforCSVFiles",
+			"nextTasks": [
+				{
+					"taskId": "11"
+				}
+			],
+			"taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+			"externalTaskType": "NORMAL_TASK"
+		},
+		{
+			"task": "GenericConnectorTask",
+			"taskId": "16",
+			"parameters": {
+				"actionName": {
+					"key": "actionName",
+					"value": {
+						"stringValue": "Download"
+					}
+				},
+				"connectionName": {
+					"key": "connectionName",
+					"value": {
+						"stringValue": "projects/bap-emea-apigee-11/locations/europe-west4/connections/sftp"
+					}
+				},
+				"connectionVersion": {
+					"key": "connectionVersion",
+					"value": {
+						"stringValue": "projects/bap-emea-apigee-11/locations/global/providers/default/connectors/sftp/versions/1"
+					}
+				},
+				"connectorInputPayload": {
+					"key": "connectorInputPayload",
+					"value": {
+						"stringValue": "$`Task_16_connectorInputPayload`$"
+					}
+				},
+				"connectorOutputPayload": {
+					"key": "connectorOutputPayload",
+					"value": {
+						"stringValue": "$`Task_16_connectorOutputPayload`$"
+					}
+				},
+				"operation": {
+					"key": "operation",
+					"value": {
+						"stringValue": "EXECUTE_ACTION"
+					}
+				}
+			},
+			"displayName": "GetIndividualFilefromSFTP",
+			"nextTasks": [
+				{
+					"taskId": "19"
+				}
+			],
+			"taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+			"externalTaskType": "NORMAL_TASK"
+		},
+		{
+			"task": "FieldMappingTask",
+			"taskId": "17",
+			"parameters": {
+				"FieldMappingConfigTaskParameterKey": {
+					"key": "FieldMappingConfigTaskParameterKey",
+					"value": {
+						"jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.proto.FieldMappingConfig\",\n  \"mappedFields\": [{\n    \"inputField\": {\n      \"fieldType\": \"STRING_VALUE\",\n      \"transformExpression\": {\n        \"initialValue\": {\n          \"referenceValue\": \"$FileToProcess.FilePath$\"\n        }\n      }\n    },\n    \"outputField\": {\n      \"referenceKey\": \"$`Task_16_connectorInputPayload`.RemoteFile$\",\n      \"fieldType\": \"STRING_VALUE\",\n      \"cardinality\": \"OPTIONAL\"\n    }\n  }]\n}"
+					}
+				}
+			},
+			"displayName": "DataforIndividualFile",
+			"nextTasks": [
+				{
+					"taskId": "16"
+				}
+			],
+			"taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+			"externalTaskType": "NORMAL_TASK"
+		},
+		{
+			"task": "GenericConnectorTask",
+			"taskId": "18",
+			"parameters": {
+				"actionName": {
+					"key": "actionName",
+					"value": {
+						"stringValue": "UploadObject"
+					}
+				},
+				"connectionName": {
+					"key": "connectionName",
+					"value": {
+						"stringValue": "projects/bap-emea-apigee-11/locations/europe-west4/connections/gcs-connection"
+					}
+				},
+				"connectionVersion": {
+					"key": "connectionVersion",
+					"value": {
+						"stringValue": "projects/bap-emea-apigee-11/locations/global/providers/gcp/connectors/gcs/versions/1"
+					}
+				},
+				"connectorInputPayload": {
+					"key": "connectorInputPayload",
+					"value": {
+						"stringValue": "$`Task_18_connectorInputPayload`$"
+					}
+				},
+				"connectorOutputPayload": {
+					"key": "connectorOutputPayload",
+					"value": {
+						"stringValue": "$`Task_18_connectorOutputPayload`$"
+					}
+				},
+				"operation": {
+					"key": "operation",
+					"value": {
+						"stringValue": "EXECUTE_ACTION"
+					}
+				}
+			},
+			"displayName": "UploadFileinGCS",
+			"taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+			"externalTaskType": "NORMAL_TASK"
+		},
+		{
+			"task": "FieldMappingTask",
+			"taskId": "19",
+			"parameters": {
+				"FieldMappingConfigTaskParameterKey": {
+					"key": "FieldMappingConfigTaskParameterKey",
+					"value": {
+						"jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.proto.FieldMappingConfig\",\n  \"mappedFields\": [{\n    \"inputField\": {\n      \"fieldType\": \"STRING_VALUE\",\n      \"transformExpression\": {\n        \"initialValue\": {\n          \"referenceValue\": \"$`CONFIG_GCSBucketName`$\"\n        }\n      }\n    },\n    \"outputField\": {\n      \"referenceKey\": \"$`Task_18_connectorInputPayload`.Bucket$\",\n      \"fieldType\": \"STRING_VALUE\",\n      \"cardinality\": \"OPTIONAL\"\n    }\n  }, {\n    \"inputField\": {\n      \"fieldType\": \"STRING_VALUE\",\n      \"transformExpression\": {\n        \"initialValue\": {\n          \"referenceValue\": \"$FileToProcess.Filename$\"\n        }\n      }\n    },\n    \"outputField\": {\n      \"referenceKey\": \"$`Task_18_connectorInputPayload`.ObjectName$\",\n      \"fieldType\": \"JSON_VALUE\",\n      \"cardinality\": \"OPTIONAL\"\n    }\n  }, {\n    \"inputField\": {\n      \"fieldType\": \"JSON_VALUE\",\n      \"transformExpression\": {\n        \"initialValue\": {\n          \"referenceValue\": \"$`Task_16_connectorOutputPayload`$\"\n        },\n        \"transformationFunctions\": [{\n          \"functionType\": {\n            \"jsonFunction\": {\n              \"functionName\": \"GET_ELEMENT\"\n            }\n          },\n          \"parameters\": [{\n            \"initialValue\": {\n              \"literalValue\": {\n                \"intValue\": \"1\"\n              }\n            }\n          }]\n        }, {\n          \"functionType\": {\n            \"jsonFunction\": {\n              \"functionName\": \"GET_PROPERTY\"\n            }\n          },\n          \"parameters\": [{\n            \"initialValue\": {\n              \"literalValue\": {\n                \"stringValue\": \"Content\"\n              }\n            }\n          }]\n        }]\n      }\n    },\n    \"outputField\": {\n      \"referenceKey\": \"$`Task_18_connectorInputPayload`.Content$\",\n      \"fieldType\": \"JSON_VALUE\",\n      \"cardinality\": \"OPTIONAL\"\n    }\n  }]\n}"
+					}
+				}
+			},
+			"displayName": "MapDatatoGCSFormat",
+			"nextTasks": [
+				{
+					"taskId": "18"
+				}
+			],
+			"taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+			"externalTaskType": "NORMAL_TASK"
+		},
+		{
+			"task": "FieldMappingTask",
+			"taskId": "2",
+			"parameters": {
+				"FieldMappingConfigTaskParameterKey": {
+					"key": "FieldMappingConfigTaskParameterKey",
+					"value": {
+						"jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.proto.FieldMappingConfig\",\n  \"mappedFields\": [{\n    \"inputField\": {\n      \"fieldType\": \"STRING_VALUE\",\n      \"transformExpression\": {\n        \"initialValue\": {\n          \"literalValue\": {\n            \"stringValue\": \"\\\"FirstName,LastName,Email,MobilePhone,External_Id__c\\\\\\\\nGinelle,Merioth,gmerioth0@example.com,851-555-8435,4d13cac0-2c11-48e9-891d-49ee9508a6c7\\\\\\\\nDalli,Tumilson,dtumilson1@example.com,881-555-6742,38bcb24b-247f-498b-9502-c98995a1e04b\\\\\\\\nRobbin,Purveys,rpurveys2@example.com,732-555-6909,35d96c7a-3856-4809-8c49-35ddb9fa7dd9\\\\\\\\nLothaire,Ivanchenkov,livanchenkov3@example.com,144-555-1959,75f63f26-6f4a-406f-a9f4-807f4a8a7b51\\\"\"\n          }\n        }\n      }\n    },\n    \"outputField\": {\n      \"referenceKey\": \"$`Task_1_connectorInputPayload`.ContentBytes$\",\n      \"fieldType\": \"JSON_VALUE\",\n      \"cardinality\": \"OPTIONAL\"\n    }\n  }, {\n    \"inputField\": {\n      \"fieldType\": \"STRING_VALUE\",\n      \"transformExpression\": {\n        \"initialValue\": {\n          \"referenceValue\": \"$`CONFIG_SFTPFilepath`$\"\n        },\n        \"transformationFunctions\": [{\n          \"functionType\": {\n            \"stringFunction\": {\n              \"functionName\": \"CONCAT\"\n            }\n          },\n          \"parameters\": [{\n            \"initialValue\": {\n              \"literalValue\": {\n                \"stringValue\": \"file1.csv\"\n              }\n            }\n          }]\n        }]\n      }\n    },\n    \"outputField\": {\n      \"referenceKey\": \"$`Task_1_connectorInputPayload`.RemoteFile$\",\n      \"fieldType\": \"STRING_VALUE\",\n      \"cardinality\": \"OPTIONAL\"\n    }\n  }]\n}"
+					}
+				}
+			},
+			"displayName": "Data Mapping",
+			"nextTasks": [
+				{
+					"taskId": "1"
+				}
+			],
+			"taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+			"externalTaskType": "NORMAL_TASK"
+		},
+		{
+			"task": "FieldMappingTask",
+			"taskId": "20",
+			"parameters": {
+				"FieldMappingConfigTaskParameterKey": {
+					"key": "FieldMappingConfigTaskParameterKey",
+					"value": {
+						"jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.proto.FieldMappingConfig\",\n  \"mappedFields\": [{\n    \"inputField\": {\n      \"fieldType\": \"STRING_VALUE\",\n      \"transformExpression\": {\n        \"initialValue\": {\n          \"literalValue\": {\n            \"stringValue\": \"FilePath LIKE \\u0027\"\n          }\n        },\n        \"transformationFunctions\": [{\n          \"functionType\": {\n            \"stringFunction\": {\n              \"functionName\": \"CONCAT\"\n            }\n          },\n          \"parameters\": [{\n            \"initialValue\": {\n              \"referenceValue\": \"$`CONFIG_SFTPFilepath`$\"\n            }\n          }]\n        }, {\n          \"functionType\": {\n            \"stringFunction\": {\n              \"functionName\": \"CONCAT\"\n            }\n          },\n          \"parameters\": [{\n            \"initialValue\": {\n              \"literalValue\": {\n                \"stringValue\": \"%.csv\\u0027\"\n              }\n            }\n          }]\n        }]\n      }\n    },\n    \"outputField\": {\n      \"referenceKey\": \"$`Task_14_filterClause`$\",\n      \"fieldType\": \"STRING_VALUE\",\n      \"cardinality\": \"OPTIONAL\"\n    }\n  }]\n}"
+					}
+				}
+			},
+			"displayName": "Data Mapping 1",
+			"nextTasks": [
+				{
+					"taskId": "14"
+				}
+			],
+			"taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+			"externalTaskType": "NORMAL_TASK"
+		}
+	],
+	"integrationParameters": [
+		{
+			"key": "FileToProcess",
+			"dataType": "JSON_VALUE",
+			"jsonSchema": "{\n  \"$schema\": \"http://json-schema.org/draft-07/schema#\",\n  \"type\": \"object\",\n  \"properties\": {\n    \"FilePath\": {\n      \"type\": \"string\"\n    },\n    \"LastModified\": {\n      \"type\": \"string\"\n    },\n    \"Group\": {\n      \"type\": \"string\"\n    },\n    \"Owner\": {\n      \"type\": \"string\"\n    },\n    \"LocalFile\": {\n      \"type\": \"null\"\n    },\n    \"IsDirectory\": {\n      \"type\": \"boolean\"\n    },\n    \"OwnerId\": {\n      \"type\": \"string\"\n    },\n    \"Permissions\": {\n      \"type\": \"string\"\n    },\n    \"Filename\": {\n      \"type\": \"string\"\n    },\n    \"FileSize\": {\n      \"type\": \"number\"\n    },\n    \"GroupId\": {\n      \"type\": \"string\"\n    }\n  }\n}"
+		},
+		{
+			"key": "`Task_12_scatterResponseJson`",
+			"dataType": "JSON_VALUE",
+			"isTransient": true,
+			"producer": "1_12"
+		},
+		{
+			"key": "`Task_1_connectorOutputPayload`",
+			"dataType": "JSON_VALUE",
+			"isTransient": true,
+			"producer": "1_1",
+			"jsonSchema": "{\n  \"type\": \"array\",\n  \"$schema\": \"http://json-schema.org/draft-07/schema#\",\n  \"items\": {\n    \"type\": \"object\",\n    \"properties\": {\n    },\n    \"$schema\": \"http://json-schema.org/draft-07/schema#\"\n  }\n}"
+		},
+		{
+			"key": "`Task_1_connectorInputPayload`",
+			"dataType": "JSON_VALUE",
+			"defaultValue": {
+				"jsonValue": "{\n  \"Content\": \"FirstName,LastName,Email,MobilePhone,External_Id__c\\\\nGinelle,Merioth,gmerioth0@example.com,851-555-8435,4d13cac0-2c11-48e9-891d-49ee9508a6c7\\\\nDalli,Tumilson,dtumilson1@example.com,881-555-6742,38bcb24b-247f-498b-9502-c98995a1e04b\\\\nRobbin,Purveys,rpurveys2@example.com,732-555-6909,35d96c7a-3856-4809-8c49-35ddb9fa7dd9\\\\nLothaire,Ivanchenkov,livanchenkov3@example.com,144-555-1959,75f63f26-6f4a-406f-a9f4-807f4a8a7b51\",\n  \"RemoteFile\": \"/tmp/file1.csv\",\n  \"Overwrite\": true\n}"
+			},
+			"producer": "1_1",
+			"jsonSchema": "{\n  \"$schema\": \"http://json-schema.org/draft-07/schema#\",\n  \"type\": \"object\",\n  \"properties\": {\n    \"Content\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"String content to upload as file.\"\n    },\n    \"ContentBytes\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"Bytes content to upload as file.\"\n    },\n    \"HasBytes\": {\n      \"type\": [\"boolean\", \"null\"],\n      \"description\": \"Whether to upload content as bytes.\"\n    },\n    \"RemoteFile\": {\n      \"type\": \"string\",\n      \"description\": \"The file name on the remote host.\"\n    },\n    \"Overwrite\": {\n      \"type\": [\"boolean\", \"null\"],\n      \"description\": \"Whether to overwrite Remote Files. The default value is false.\"\n    }\n  },\n  \"required\": [\"RemoteFile\"]\n}"
+		},
+		{
+			"key": "FilterClauseforCSVFiles",
+			"dataType": "STRING_VALUE"
+		},
+		{
+			"key": "`Task_11_listEntitiesPageSize`",
+			"dataType": "INT_VALUE",
+			"producer": "1_11"
+		},
+		{
+			"key": "`Task_11_listEntitiesPageToken`",
+			"dataType": "STRING_VALUE",
+			"producer": "1_11"
+		},
+		{
+			"key": "`Task_11_listEntitiesSortByColumns`",
+			"dataType": "STRING_ARRAY",
+			"producer": "1_11"
+		},
+		{
+			"key": "`Task_11_connectorOutputPayload`",
+			"dataType": "JSON_VALUE",
+			"isTransient": true,
+			"producer": "1_11",
+			"jsonSchema": "{\n  \"type\": [\"array\"],\n  \"items\": {\n    \"$schema\": \"http://json-schema.org/draft-07/schema#\",\n    \"type\": \"object\",\n    \"properties\": {\n      \"LastModified\": {\n        \"type\": [\"string\", \"null\"]\n      },\n      \"IsDirectory\": {\n        \"type\": [\"boolean\", \"null\"]\n      },\n      \"Permissions\": {\n        \"type\": [\"string\", \"null\"]\n      },\n      \"LocalFile\": {\n        \"type\": [\"string\", \"null\"]\n      },\n      \"OwnerId\": {\n        \"type\": [\"string\", \"null\"]\n      },\n      \"Filename\": {\n        \"type\": [\"string\", \"null\"],\n        \"description\": \"The name of the file or directory.\"\n      },\n      \"FilePath\": {\n        \"type\": \"string\"\n      },\n      \"Owner\": {\n        \"type\": [\"string\", \"null\"]\n      },\n      \"GroupId\": {\n        \"type\": [\"string\", \"null\"]\n      },\n      \"Group\": {\n        \"type\": [\"string\", \"null\"]\n      },\n      \"FileSize\": {\n        \"type\": [\"integer\", \"null\"],\n        \"description\": \"The size of the file.\"\n      }\n    }\n  },\n  \"$schema\": \"http://json-schema.org/draft-07/schema#\"\n}"
+		},
+		{
+			"key": "`Task_11_listEntitiesNextPageToken`",
+			"dataType": "STRING_VALUE",
+			"isTransient": true,
+			"producer": "1_11"
+		},
+		{
+			"key": "`Task_16_connectorInputPayload`",
+			"dataType": "JSON_VALUE",
+			"producer": "1_16",
+			"jsonSchema": "{\n  \"$schema\": \"http://json-schema.org/draft-07/schema#\",\n  \"type\": \"object\",\n  \"properties\": {\n    \"RemoteFile\": {\n      \"type\": \"string\",\n      \"description\": \"The file name on the remote host.\"\n    },\n    \"HasBytes\": {\n      \"type\": [\"boolean\", \"null\"],\n      \"description\": \"Whether to download content as bytes.\"\n    }\n  },\n  \"required\": [\"RemoteFile\"]\n}"
+		},
+		{
+			"key": "`Task_16_connectorOutputPayload`",
+			"dataType": "JSON_VALUE",
+			"isTransient": true,
+			"producer": "1_16",
+			"jsonSchema": "{\n  \"type\": \"array\",\n  \"$schema\": \"http://json-schema.org/draft-07/schema#\",\n  \"items\": {\n    \"type\": \"object\",\n    \"properties\": {\n    },\n    \"$schema\": \"http://json-schema.org/draft-07/schema#\"\n  }\n}"
+		},
+		{
+			"key": "`Task_18_connectorInputPayload`",
+			"dataType": "JSON_VALUE",
+			"producer": "1_18",
+			"jsonSchema": "{\n  \"$schema\": \"http://json-schema.org/draft-07/schema#\",\n  \"type\": \"object\",\n  \"properties\": {\n    \"FolderPath\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"The path to the folder that will receive the data of the object.\"\n    },\n    \"Content\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"The Content to be uploaded in the bucket\"\n    },\n    \"ObjectName\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"The name of the uploaded object. It should be specified only when uploading the content as InputStream.\"\n    },\n    \"ContentBytes\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"Bytes content to upload as file.\"\n    },\n    \"ContentType\": {\n      \"type\": [\"string\", \"null\"],\n      \"description\": \"Content-Type of the object data.\",\n      \"default\": \"application/x-www-form-urlencoded\"\n    },\n    \"HasBytes\": {\n      \"type\": [\"boolean\", \"null\"],\n      \"description\": \"Whether to upload content as bytes.\",\n      \"default\": false\n    },\n    \"Bucket\": {\n      \"type\": \"string\",\n      \"description\": \"Bucket name where the object will be uploaded.\"\n    }\n  },\n  \"required\": [\"Bucket\"]\n}"
+		},
+		{
+			"key": "`Task_18_connectorOutputPayload`",
+			"dataType": "JSON_VALUE",
+			"isTransient": true,
+			"producer": "1_18",
+			"jsonSchema": "{\n  \"type\": \"array\",\n  \"$schema\": \"http://json-schema.org/draft-07/schema#\",\n  \"items\": {\n    \"type\": \"object\",\n    \"properties\": {\n    },\n    \"$schema\": \"http://json-schema.org/draft-07/schema#\"\n  }\n}"
+		},
+		{
+			"key": "`Task_14_listEntitiesPageSize`",
+			"dataType": "INT_VALUE",
+			"producer": "1_14"
+		},
+		{
+			"key": "`Task_14_listEntitiesPageToken`",
+			"dataType": "STRING_VALUE",
+			"producer": "1_14"
+		},
+		{
+			"key": "`Task_14_listEntitiesSortByColumns`",
+			"dataType": "STRING_ARRAY",
+			"producer": "1_14"
+		},
+		{
+			"key": "`Task_14_connectorOutputPayload`",
+			"dataType": "JSON_VALUE",
+			"isTransient": true,
+			"producer": "1_14",
+			"jsonSchema": "{\n  \"type\": [\"array\"],\n  \"items\": {\n    \"$schema\": \"http://json-schema.org/draft-07/schema#\",\n    \"type\": \"object\",\n    \"properties\": {\n      \"GroupId\": {\n        \"type\": [\"string\", \"null\"]\n      },\n      \"LastModified\": {\n        \"type\": [\"string\", \"null\"]\n      },\n      \"FileSize\": {\n        \"type\": [\"integer\", \"null\"],\n        \"description\": \"The size of the file.\"\n      },\n      \"FilePath\": {\n        \"type\": \"string\"\n      },\n      \"OwnerId\": {\n        \"type\": [\"string\", \"null\"]\n      },\n      \"LocalFile\": {\n        \"type\": [\"string\", \"null\"]\n      },\n      \"Group\": {\n        \"type\": [\"string\", \"null\"]\n      },\n      \"Filename\": {\n        \"type\": [\"string\", \"null\"],\n        \"description\": \"The name of the file or directory.\"\n      },\n      \"Owner\": {\n        \"type\": [\"string\", \"null\"]\n      },\n      \"Permissions\": {\n        \"type\": [\"string\", \"null\"]\n      },\n      \"IsDirectory\": {\n        \"type\": [\"boolean\", \"null\"]\n      }\n    }\n  },\n  \"$schema\": \"http://json-schema.org/draft-07/schema#\"\n}"
+		},
+		{
+			"key": "`Task_14_listEntitiesNextPageToken`",
+			"dataType": "STRING_VALUE",
+			"isTransient": true,
+			"producer": "1_14"
+		},
+		{
+			"key": "`Task_14_filterClause`",
+			"dataType": "STRING_VALUE",
+			"defaultValue": {
+				"stringValue": "FilePath LIKE '/tmp/%.csv'"
+			},
+			"producer": "1_14"
+		},
+		{
+			"key": "`Task_11_filterClause`",
+			"dataType": "STRING_VALUE",
+			"defaultValue": {
+				"stringValue": "FilePath LIKE '/tmp/%.csv'"
+			},
+			"producer": "1_11"
+		}
+	],
+	"integrationConfigParameters": [
+		{
+			"parameter": {
+				"key": "`CONFIG_GCSBucketName`",
+				"dataType": "STRING_VALUE",
+				"defaultValue": {
+					"stringValue": "testbucket_appintegration\n"
+				},
+				"displayName": "`CONFIG_GCSBucketName`"
+			},
+			"value": {
+				"stringValue": "testbucket_appintegration\n"
+			}
+		},
+		{
+			"parameter": {
+				"key": "`CONFIG_SFTPFilepath`",
+				"dataType": "STRING_VALUE",
+				"defaultValue": {
+					"stringValue": "/tmp/"
+				},
+				"displayName": "`CONFIG_SFTPFilepath`"
+			},
+			"value": {
+				"stringValue": "/tmp/"
+			}
+		}
+	],
+	"databasePersistencePolicy": "DATABASE_PERSISTENCE_POLICY_UNSPECIFIED",
+		"enableVariableMasking": false,
+		"cloudLoggingDetails": {
+			"cloudLoggingSeverity": "CLOUD_LOGGING_SEVERITY_UNSPECIFIED",
+			"enableCloudLogging": false
+		}
+}
