@@ -27,7 +27,8 @@ steps:
     - ${SHORT_SHA}
     - --wait=${_WAIT}
     - --reg=${_LOCATION}
-    - --proj=${PROJECT_ID}
+    - --proj=${_PROJECT_ID}
+    - --env=${_ENV}
     - --metadata-token
     - $(cat /tmp/cmd)
     # uncomment these as necessary
